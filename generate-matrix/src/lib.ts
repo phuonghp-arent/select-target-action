@@ -4,8 +4,10 @@ import * as core from '@actions/core';
 function getLabels(): string[] {
     const labelsFileName = 'labels.txt'
     const labelsFilePath = process.env.CI_INFO_TEMP_DIR
+    core.debug(fs.readFileSync(labelsFilePath + "/" + labelsFileName).toString());
     let r = fs.readFileSync(labelsFilePath + "/" + labelsFileName).toString().split(/\r?\n/).filter(Boolean);
-    let labels = Object.values(r)
+    let labels: string[] = Object.values(r)
+
 
     return labels;
 }
