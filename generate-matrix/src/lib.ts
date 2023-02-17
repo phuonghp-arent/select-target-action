@@ -1,9 +1,14 @@
 import * as fs from 'fs';
 import * as core from '@actions/core';
 
+const recursive = require("recursive-readdir");
+
 function getLabels(): string[] {
     const labelsFileName = 'labels.txt'
     const labelsFilePath = process.env.CI_INFO_TEMP_DIR
+    recursive(labelsFilePath + "/" + labelsFileName, function (err, files) {
+        core.debug(files);
+    });
     core.debug(fs.readFileSync(labelsFilePath + "/" + labelsFileName).toString());
     let r = fs.readFileSync(labelsFilePath + "/" + labelsFileName).toString().split(/\r?\n/).filter(Boolean);
     let labels: string[] = Object.values(r)
