@@ -2842,6 +2842,7 @@ var core = __nccwpck_require__(186);
 function getLabels() {
     const labelsFileName = 'labels.txt';
     const labelsFilePath = process.env.CI_INFO_TEMP_DIR;
+    core.debug(external_fs_.readFileSync(labelsFilePath + "/" + labelsFileName).toString());
     let r = external_fs_.readFileSync(labelsFilePath + "/" + labelsFileName).toString().split(/\r?\n/).filter(Boolean);
     let labels = Object.values(r);
     return labels;
