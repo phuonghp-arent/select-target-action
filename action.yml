@@ -15,20 +15,15 @@ inputs:
     description: "GITHUB_TOKEN"
 
 outputs:
-  matrix-workdir:
-    description: "List of working directories"
-    value: ${{ steps.generate_matrix.outputs.work_dirs }}
+  matrix-targets:
+    description: "List of targets"
+    value: ${{ steps.generate_matrix.outputs.targets }}
 
 runs:
-  using: "composite"
+  using: composite
   steps:
-    - name: Run ci-info
-      uses: ponkio-o/select-target-action/ci-info@main
-      with:
-        token: ${{ inputs.token }}
-
     - name: Generate matrix
       id: generate_matrix
-      uses: ponkio-o/select-target-action/generate-matrix@main
+      uses: phuonghp-arent/select-target-action/generate-matrix@main
       with:
         config_file: ${{ inputs.config_file }}
