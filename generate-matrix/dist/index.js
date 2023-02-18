@@ -4204,33 +4204,23 @@ function getLabels() {
     core.debug(external_fs_.readFileSync(labelsFilePath + "/" + labelsFileName).toString());
     let r = external_fs_.readFileSync(labelsFilePath + "/" + labelsFileName).toString().split(/\r?\n/).filter(Boolean);
     let labels = Object.values(r);
+    core.debug(labels.toString());
     return labels;
 }
-function getWorkDir(configPath) {
+function getTargets(configPath) {
     const labels = getLabels();
     const configData = JSON.parse(external_fs_.readFileSync(configPath, 'utf-8'));
-    const defaultTargetKey = 'default';
-    let workDirs = new Array();
-    for (var idx in labels) {
+    let targets = [];
+    for (const idx in labels) {
         let key = labels[idx];
-        for (var i in configData[key]) {
-            workDirs.push(configData[key][i]);
-        }
-    }
-    if (workDirs.length == 0) {
-        if (configData[defaultTargetKey] != undefined && configData[defaultTargetKey].length != 0) {
-            core.info("Use default target");
-            workDirs = configData[defaultTargetKey];
-        }
-        else {
-            core.debug(`workDirs: ${String(workDirs)}`);
-            core.debug(`labels: ${String(labels)}`);
-            core.setFailed("Select labels or set default target. See  https://github.com/ponkio-o/select-target-action/blob/main/README.md#default-target");
+        for (const i in configData[key]) {
+            targets.push(configData[key][i]);
         }
     }
     // merge working directories
-    let set = new Set(workDirs);
+    let set = new Set(targets);
     let setToArr = Array.from(set);
+    core.debug(setToArr.toString());
     return setToArr;
 }
 
@@ -4239,9 +4229,9 @@ function getWorkDir(configPath) {
 
 try {
     const configPath = core.getInput('config_file');
-    const workdir = getWorkDir(configPath);
-    core.info(`work_dirs: ${workdir}`);
-    core.setOutput("work_dirs", workdir);
+    const targets = getTargets(configPath);
+    core.info(`targets: ${targets}`);
+    core.setOutput("targets", targets);
 }
 catch (error) {
     core.setFailed(error.message);
